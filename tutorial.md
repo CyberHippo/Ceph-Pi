@@ -2,10 +2,13 @@
 # CEPH Storage Cluster on Raspberry Pi.
 # Installation Sheet
 
+![Ceph](https://ceph.com/wp-content/uploads/2016/07/Ceph_Logo_Standard_RGB_120411_fa.png)
+
 ## Prerequisites
 * 6 server nodes with Ubuntu 16.04 server installed
 * Root privileges on all nodes
 
+For the whole tutorial, we will use **Raspberry Pi's 3 Model B**.
 
 ### Downloading the image
 You can download Ubuntu server classic from the [Ubuntu Pi Flavour Maker website](https://ubuntu-pi-flavour-maker.org/download/). Make sure to choose the Ubuntu Classic Server 16.04 version for the Raspberry Pi 3. This image is a flavour of Ubuntu server, which have been stripped out of everything which is not strictly necessary, hence its small size.
@@ -35,7 +38,7 @@ cd ..
 
 You must reboot the machine for changes to take effect.
 
-Thanks to this [wiki](https://wiki.ubuntu.com/ARM/RaspberryPi).
+*Thanks to this [wiki](https://wiki.ubuntu.com/ARM/RaspberryPi).*
 
 ### Set up a wireless connection
 
@@ -62,12 +65,12 @@ Open the network interfaces configuration:
 sudo nano /etc/network/interfaces
 ```
 
-Append the following content to the file (make sure to replace wlan0 with the name of your wireless network interface) :
+Append the following content to the file (make sure to replace ``wlan0`` with the name of your wireless network interface) :
 
 ```
-	allow-hotplug wlan0
-	iface wlan0 inet dhcp
-	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+allow-hotplug wlan0
+iface wlan0 inet dhcp
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
 Now, open the wireless configuration file :
@@ -79,31 +82,31 @@ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 Add the following content to the file with the information about your wifi network :
 
 ```
-    network={
-        ssid="NETWORK-SSID"
-        psk="NETWORK-PASSWORD"
-    }
+network={
+    ssid="NETWORK-SSID"
+    psk="NETWORK-PASSWORD"
+}
 ```
-With a WPA2 Entreprise network, you might want to use the following configuration instead :
+With a WPA2 Enterprise network, you might want to use the following configuration instead :
 
 ```
-    network={
-    	  ssid="NETWORK-SSID"
-    	  scan_ssid=1
-      	key_mgmt=WPA-EAP
-      	identity="YOUR_USERNAME"
-      	password="YOUR_PASSWORD"
-      	eap=PEAP
-      	phase1="peaplabel=0"
-        phase2="auth=MSCHAPV2"
-    }
+network={
+	  ssid="NETWORK-SSID"
+	  scan_ssid=1
+  	key_mgmt=WPA-EAP
+  	identity="YOUR_USERNAME"
+  	password="YOUR_PASSWORD"
+  	eap=PEAP
+  	phase1="peaplabel=0"
+    phase2="auth=MSCHAPV2"
+}
 ```
 
 ### Create the Ceph User
 
 ```
-useradd -m -s /bin/bash cephuser
-passwd cephuser
+sudo useradd -m -s /bin/bash cephuser
+sudo passwd cephuser
 ```
 
 ### Add the user to the sudoers
@@ -140,16 +143,16 @@ You can edit the hosts file on all nodes with vim editor if the IP addresses don
 sudo nano /etc/hosts
 ```
 
-Paste the configuration below:
+Paste the configuration below (or adapt it according to your setup) :
 
 ```
-    192.168.1.50      admin
-    192.168.1.61      mon1
-    192.168.1.62      mon2
-    192.168.1.63      mon3
-    192.168.1.71      osd1
-    192.168.1.72      osd2
-    192.168.1.73      osd3
+192.168.1.50      admin
+192.168.1.61      mon1
+192.168.1.62      mon2
+192.168.1.63      mon3
+192.168.1.71      osd1
+192.168.1.72      osd2
+192.168.1.73      osd3
 ```
 
 ### Adding CEPH repository to the sources
@@ -163,7 +166,7 @@ sudo nano /etc/apt/sources.list.d/ceph.list
 Replace the content of the file with the following line :
 
 ```
-	deb https://download.ceph.com/debian-jewel/ xenial main
+deb https://download.ceph.com/debian-jewel/ xenial main
 ```
 
 ## Configure the SSH Server
@@ -188,30 +191,30 @@ sudo nano ~/.ssh/config
 Paste the configuration below to the file:
 
 ```
-    Host admin
-            Hostname admin
-            User cephuser
-    Host mon1
-            Hostname mon1
-            User cephuser
-    Host mon2
-            Hostname mon2
-            User cephuser
-    Host mon3
-            Hostname mon3
-            User cephuser
-    Host osd1
-            Hostname osd1
-            User cephuser
-    Host osd2
-            Hostname osd2
-            User cephuser
-    Host osd3
-            Hostname osd3
-            User cephuser
+Host admin
+        Hostname admin
+        User cephuser
+Host mon1
+        Hostname mon1
+        User cephuser
+Host mon2
+        Hostname mon2
+        User cephuser
+Host mon3
+        Hostname mon3
+        User cephuser
+Host osd1
+        Hostname osd1
+        User cephuser
+Host osd2
+        Hostname osd2
+        User cephuser
+Host osd3
+        Hostname osd3
+        User cephuser
 ```
 
-Change the permission of the config file to 644 :
+Change the permission of the configuration file to *644* :
 
 ```
 sudo chmod 644 ~/.ssh/config
@@ -234,7 +237,7 @@ ssh-copy-id mon3
 
 ## (Optional) Configure the Ubuntu Firewall
 
-For security reasons, we need to turn on the firewall on the servers. Preferably we use Ufw (Uncomplicated Firewall), the default Ubuntu firewall, to protect the system. In this step, we might want to enable ufw on all nodes, then open the ports needed by the admin, the monitors and the osd's.
+For security reasons, we need to turn on the firewall on the servers. Preferably we use **Ufw** (*Uncomplicated Firewall*), the default Ubuntu firewall, to protect the system. In this step, we might want to enable ufw on all nodes, then open the ports needed by the admin, the monitors and the osd's.
 
 ## Configure OSD Nodes
 
@@ -244,7 +247,7 @@ For this installation, we have 3 OSD nodes. Each of these nodes has two hard dis
     /dev/sdb is empty partition
 ```
 
-We will use /dev/sdb for the ceph disk. From the ceph-admin node, login to all OSD nodes and format the /dev/sdb partition with XFS file system.
+We will use ``/dev/sdb`` for the ceph disk. From the ceph-admin node, login to all OSD nodes and format the ``/dev/sdb`` partition with *XFS* file system.
 ```
 ssh osd1
 ```
@@ -258,7 +261,7 @@ sudo fdisk -l /dev/sdb
 
 ### Format the /dev/sdb partition
 
-We will format the ``/dev/sdb`` partition with an XFS filesystem and with a GPT partition table by using the parted command:
+We will format the ``/dev/sdb`` partition with an *XFS* filesystem and with a *GPT* partition table by using the parted command:
 
 ```
 sudo parted -s /dev/sdb mklabel gpt mkpart primary xfs 0% 100%
@@ -391,12 +394,7 @@ sudo ceph health
 sudo ceph -s
 ```
 
-\begin{figure}[H]
-    \center
-    \includegraphics[width=15cm]{__EXTERNAL_ASSETS__/health.png}
-    \caption{Cluster Health}
-    \label{Cluster Health}
-\end{figure}
+![Ceph Cluster Health](./images/health.png)
 
 ### Starting over
 
@@ -407,3 +405,13 @@ ceph-deploy purgedata {ceph-node} [{ceph-node}]
 ceph-deploy forgetkeys
 rm ceph.*
 ```
+
+## Special Thanks
+
+Special thanks to the following guides that helped me write this tutorial :
+
+* The definitive guide: Ceph Cluster on Raspberry Pi, *Bryan Apperson* &rightarrow; [**link**](http://bryanapperson.com/blog/the-definitive-guide-ceph-cluster-on-raspberry-pi/).
+* Small scale Ceph Replicated Storage, *James Coyle* &rightarrow; [**link**](https://www.jamescoyle.net/how-to/2105-small-scale-ceph-replicated-storage).
+* Ceph Pi - Mount Up,* Vess Bakalov* &rightarrow; [**link**](millibit.blogspot.com/2014/12/ceph-pi-mount-up-mounting-your-ceph.html).
+* How to install a Ceph Storage Cluster on Ubuntu 16.04, *HowToForge* &rightarrow; [**link**](https://www.howtoforge.com/tutorial/how-to-install-a-ceph-cluster-on-ubuntu-16-04/).
+* RaspberryPi, *Wiki Ubuntu* &rightarrow; [**link**](https://wiki.ubuntu.com/ARM/RaspberryPi).
