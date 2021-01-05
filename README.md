@@ -11,13 +11,11 @@
 For the whole tutorial, we will use **Raspberry Pi's 3 Model B**.
 
 ### Downloading the image
-You can download Ubuntu server classic from the [Ubuntu Pi Flavour Maker website](https://ubuntu-pi-flavour-maker.org/download/). Make sure to choose the Ubuntu Classic Server 16.04 version for the Raspberry Pi 3. This image is a flavour of Ubuntu server, which have been stripped out of everything which is not strictly necessary, hence its small size.
+You can download Ubuntu server classic from the [Ubuntu RaspberryPi wiki](https://wiki.ubuntu.com/ARM/RaspberryPi) (section **Unofficial images** : [`ubuntu-16.04-preinstalled-server-armhf+raspi3.img.xz`](https://www.finnie.org/software/raspberrypi/ubuntu-rpi3/ubuntu-16.04-preinstalled-server-armhf+raspi3.img.xz)). Make sure to choose the Ubuntu Classic Server 16.04 version for the Raspberry Pi 3. Newer Ubuntu versions are available on the [Ubuntu website](https://ubuntu.com/download/raspberry-pi).
+
 
 ### Flashing the image
-Now, you must flash the image on the SD Card. It is recommended to use [Etcher.io](https://etcher.io/), which makes the process incredibly simple, fast and safe. Etcher is open-source and available for Windows, MacOS and Linux.
-
-
-![Etcher.io](https://etcher.io/static/screenshot.gif)
+Now, you must flash the image on the SD Card. It is recommended to use [Etcher.io](https://www.balena.io/etcher/), which makes the process incredibly simple, fast and safe. Etcher is open-source and available for Windows, MacOS and Linux.
 
 
 Now you are all set to configure the nodes and build up your cluster !  
